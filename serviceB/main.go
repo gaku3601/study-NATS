@@ -13,6 +13,8 @@ func main() {
 	// Create server connection
 	nc, _ := nats.Connect(nats.DefaultURL)
 	conn, _ := nats.NewEncodedConn(nc, nats.JSON_ENCODER)
+	defer conn.Close()
+	defer nc.Close()
 	log.Println("Connected to " + nats.DefaultURL)
 
 	errChan := make(chan error)
