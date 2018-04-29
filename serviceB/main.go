@@ -17,29 +17,24 @@ func main() {
 	log.Println("Connected to " + nats.DefaultURL)
 
 	// routing
-	index(c)
-	login(c)
+	c.Subscribe("index", index)
+	c.Subscribe("login", login)
 }
 
-func index(c *nats.EncodedConn) {
+func index(subj, reply string, msg string) {
 	// Replying
-	c.Subscribe("index", func(subj, reply string, msg string) {
-		fmt.Println(msg)
-		// 返答する
-		c.Publish(reply, "I can help!")
-	})
+	fmt.Println(msg)
+	// 返答する
+	c.Publish(reply, "I can help!")
 }
 
-func login(c *nats.EncodedConn) {
-	// Replying
-	c.Subscribe("login", func(subj, reply string, msg string) {
-		v, _ := jason.NewObjectFromBytes([]byte(msg))
-		email, _ := v.GetString("Email")
-		password, _ := v.GetString("Password")
-		// 受け取った値をログ出力
-		fmt.Println("Email:" + email)
-		fmt.Println("Password:" + password)
-		// 返答する
-		c.Publish(reply, "login success!")
-	})
+func login(subj, reply string, msg string) {
+	v, _ := jason.NewObjectFromBytes([]byte(msg))
+	email, _ := v.GetString("Email")
+	password, _ := v.GetString("Password")
+	// 受け取った値をログ出力
+	fmt.Println("Email:" + email)
+	fmt.Println("Password:" + password)
+	// 返答する
+	c.Publish(reply, "login success!")
 }

@@ -17,8 +17,8 @@ func TestMain(m *testing.M) {
 	c, _ = nats.NewEncodedConn(nc, nats.JSON_ENCODER)
 	defer c.Close()
 	// 起動
-	index(c)
-	login(c)
+	c.Subscribe("index", index)
+	c.Subscribe("login", login)
 
 	code := m.Run()
 	// ここでテストのお片づけ
