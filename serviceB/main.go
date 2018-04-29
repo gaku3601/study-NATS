@@ -4,6 +4,7 @@ package main
 import (
 	"fmt"
 	"log"
+	"runtime"
 
 	"github.com/antonholmquist/jason"
 	"github.com/nats-io/nats"
@@ -20,9 +21,9 @@ func main() {
 	defer c.Close()
 	log.Println("Connected to " + nats.DefaultURL)
 
-	// routing
 	c.Subscribe("index", index)
 	c.Subscribe("login", login)
+	runtime.Goexit()
 }
 
 func index(subj, reply string, msg string) {

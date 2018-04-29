@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/labstack/echo"
+	"github.com/labstack/echo/engine/standard"
 	"github.com/nats-io/nats"
 )
 
@@ -17,7 +18,7 @@ func main() {
 	e.GET("/login", login)
 
 	// Start server
-	e.Logger.Fatal(e.Start(":8080"))
+	e.Run(standard.New(":8080"))
 }
 
 func index(c echo.Context) error {
