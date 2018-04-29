@@ -2,6 +2,12 @@
 
 
 [[projects]]
+  name = "github.com/antonholmquist/jason"
+  packages = ["."]
+  revision = "c23cef7eaa75a6a5b8810120e167bd590d8fd2ab"
+  version = "v1.0.0"
+
+[[projects]]
   name = "github.com/nats-io/go-nats"
   packages = [
     "encoders/builtin",
@@ -25,6 +31,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "11dc6b926980e50c24e4f23c3939e64ba024a2c90be8955a20ca9e920549c7c5"
+  inputs-digest = "6b0a9b8b30fa1149e4fed00d7c4b1b7ec3d485172b2a311a57ab62a949917b8f"
   solver-name = "gps-cdcl"
   solver-version = 1

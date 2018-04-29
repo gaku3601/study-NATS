@@ -1,7 +1,6 @@
 package main
 
 import (
-	"log"
 	"net/http"
 	"time"
 
@@ -15,39 +14,31 @@ func main() {
 
 	// Routes
 	e.GET("/", index)
-	e.GET("/simplicity", simplicity)
+	e.GET("/login", login)
 
 	// Start server
 	e.Logger.Fatal(e.Start(":8080"))
-
 }
 
-// Handler
 func index(c echo.Context) error {
-	// Connect to server; defer close
-	natsConnection, err := nats.Connect(nats.DefaultURL)
-	if err != nil {
-		return c.String(http.StatusInternalServerError, "Nats Server: "+err.Error())
-	}
-	defer natsConnection.Close()
-	log.Println("Connected to " + nats.DefaultURL)
-
-	// Publish message on subject
-	subject := "foo"
-	natsConnection.Publish(subject, []byte("Hello NATS"))
-
-	// Simple Sync Subscriber
-	sub, _ := natsConnection.SubscribeSync("resfoo")
-	m, err := sub.NextMsg(10 * time.Millisecond)
-	if err != nil {
-		return c.String(http.StatusInternalServerError, "ServiceB Connection: "+err.Error())
-	}
-	return c.String(http.StatusOK, string(m.Data))
-}
-
-func simplicity(c echo.Context) error {
 	nc, _ := nats.Connect(nats.DefaultURL)
 	// Requests
-	msg, _ := nc.Request("simplicity", []byte("help me"), 10*time.Millisecond)
+	msg, _ := nc.Request("index", []byte("help me"), 10*time.Millisecond)
 	return c.String(http.StatusOK, string(msg.Data))
+}
+
+func login(c echo.Context) error {
+	// ログイン情報の作成
+	loginUser := &user{Email: "pro.gaku@gmail.com", Password: "test"}
+	nc, _ := nats.Connect(nats.DefaultURL)
+	conn, _ := nats.NewEncodedConn(nc, nats.JSON_ENCODER)
+	// Requests
+	var response string
+	conn.Request("login", loginUser, &response, 10*time.Millisecond)
+	return c.String(http.StatusOK, response)
+}
+
+type user struct {
+	Email    string
+	Password string
 }
