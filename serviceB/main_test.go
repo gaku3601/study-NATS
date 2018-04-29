@@ -8,17 +8,11 @@ import (
 	"github.com/nats-io/nats"
 )
 
-var (
-	c *nats.EncodedConn
-)
-
 func TestMain(m *testing.M) {
+	// ここにテストの初期化処理
 	nc, _ := nats.Connect(nats.DefaultURL)
 	c, _ = nats.NewEncodedConn(nc, nats.JSON_ENCODER)
 	defer c.Close()
-	// 起動
-	c.Subscribe("index", index)
-	c.Subscribe("login", login)
 
 	code := m.Run()
 	// ここでテストのお片づけ
@@ -26,6 +20,7 @@ func TestMain(m *testing.M) {
 }
 
 func TestIndex(t *testing.T) {
+	c.Subscribe("index", index)
 	// Requests
 	var res string
 	c.Request("index", []byte("help me"), &res, 10*time.Millisecond)
@@ -36,6 +31,7 @@ func TestIndex(t *testing.T) {
 }
 
 func TestLogin(t *testing.T) {
+	c.Subscribe("login", login)
 	login := &user{Email: "pro.gaku@gmail.com", Password: "test"}
 	// Requests
 	var res string

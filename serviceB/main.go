@@ -9,10 +9,14 @@ import (
 	"github.com/nats-io/nats"
 )
 
+var (
+	c *nats.EncodedConn
+)
+
 func main() {
 	// Create server connection
 	nc, _ := nats.Connect(nats.DefaultURL)
-	c, _ := nats.NewEncodedConn(nc, nats.JSON_ENCODER)
+	c, _ = nats.NewEncodedConn(nc, nats.JSON_ENCODER)
 	defer c.Close()
 	log.Println("Connected to " + nats.DefaultURL)
 
